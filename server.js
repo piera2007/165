@@ -20,7 +20,7 @@ mongoose.connect('mongodb+srv://dbAdmin:cSReR6ozlS35gEXN@cluster0.8faof.mongodb.
 // Einfaches Rollen-Middleware
 function checkRole(requiredRole) {
   return (req, res, next) => {
-    
+
     const userRole = req.headers['x-role'];
     if (!userRole) {
       return res.status(403).json({ error: 'Kein Zugriff: Keine Rolle angegeben' });
@@ -41,8 +41,8 @@ function checkRole(requiredRole) {
 
 // CRUD-Endpunkte mit Rollen-Check
 
-// 1. Schüler:in erstellen (z.B. nur APIUser darf erstellen)
-app.post('/students', checkRole('APIUser'), async (req, res) => {
+// 1. Schüler:in erstellen (z.B. nur APIUser, dbAdmin darf erstellen)
+app.post('/students', checkRole(['APIUser', 'dbAdmin']), async (req, res) => {
   try {
     const student = new Student(req.body);
     const savedStudent = await student.save();
@@ -52,8 +52,8 @@ app.post('/students', checkRole('APIUser'), async (req, res) => {
   }
 });
 
-// 2. Alle Schüler:innen abrufen (z.B. jeder mit Rolle APIUser oder dbAdmin darf lesen)
-app.get('/students', checkRole(['APIUser', 'dbAdmin']), async (req, res) => {
+// 2. Alle Schüler:innen abrufen (z.B. jeder mit Rolle APIUser, ReadUser oder dbAdmin darf lesen)
+app.get('/students', checkRole(['APIUser', 'ReadUser', 'dbAdmin']), async (req, res) => {
   try {
     const students = await Student.find();
     res.json(students);
@@ -62,8 +62,8 @@ app.get('/students', checkRole(['APIUser', 'dbAdmin']), async (req, res) => {
   }
 });
 
-// 3. Schüler:in aktualisieren (nur APIUser)
-app.put('/students/:id', checkRole('APIUser'), async (req, res) => {
+// 3. Schüler:in aktualisieren (nur APIUser, dbAdmin)
+app.put('/students/:id', checkRole(['APIUser', 'dbAdmin']), async (req, res) => {
   try {
     const updatedStudent = await Student.findByIdAndUpdate(req.params.id, req.body, { new: true });
     res.json(updatedStudent);
