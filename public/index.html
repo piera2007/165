@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <title>Dashboard - Schüler:innen Analyse</title>
+  <!-- Chart.js einbinden -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 20px; }
+    .chart-container { width: 80%; margin: auto; }
+  </style>
+</head>
+<body>
+  <h1>Dashboard: Notendurchschnitt pro Klasse</h1>
+  <div class="chart-container">
+    <canvas id="gradeChart"></canvas>
+  </div>
+
+  <script>
+    // Funktion, um Daten von der API zu laden
+    async function fetchAverageGrades() {
+      try {
+        const response = await fetch('http://localhost:3000/students/average/grade');
+        const data = await response.json();
+        return data;
+      } catch (error) {
+        console.error('Fehler beim Abrufen der Daten:', error);
+        return [];
+      }
+    }
+
+    // Funktion, um den Chart zu erstellen
+    async function createChart() {
+      const avgData = await fetchAverageGrades();
+
+      // Extrahiere Klassen und Notendurchschnitte
+      const labels = avgData.map(item => item._id[0]);
+      const avgGrades = avgData.map(item => item.avgNote);
+
+      const ctx = document.getElementById('gradeChart').getContext('2d');
+      new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: labels,
+          datasets: [{
+            label: 'Durchschnittsnote',
+            data: avgGrades,
+            backgroundColor: 'rgba(75, 192, 192, 0.6)',
+            borderColor: 'rgba(75, 192, 192, 1)',
+            borderWidth: 1
+          }]
+        },
+        options: {
+          scales: {
+            y: { beginAtZero: true }
+          }
+        }
+      });
+    }
+
+    // Chart erstellen, wenn die Seite geladen ist
+    window.onload = createChart;
+  </script>
+</body>
+</html>

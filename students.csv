@@ -1,0 +1,3 @@
+name,geburtsdatum,adresse.strasse,adresse.stadt,adresse.plz,klassen,noten
+Max Mustermann,2005-04-15,Musterstraße 1,Berlin,10115,"10A","[{""fach"":""Mathe"",""note"":1},{""fach"":""Deutsch"",""note"":2}]"
+Erika Musterfrau,2006-07-20,Beispielweg 5,Hamburg,20095,"10B","[{""fach"":""Mathe"",""note"":2},{""fach"":""Englisch"",""note"":1}]"
