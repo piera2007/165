@@ -3,11 +3,9 @@ const fs = require('fs');
 const csv = require('csv-parser');
 const mongoose = require('mongoose');
 const Student = require('../models/Student');
+const results = [];
 
 mongoose.connect('mongodb+srv://dbAdmin:cSReR6ozlS35gEXN@cluster0.8faof.mongodb.net/schuelerdb?retryWrites=true&w=majority');
-
-
-const results = [];
 
 fs.createReadStream('students.csv')
   .pipe(csv())

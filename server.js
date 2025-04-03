@@ -20,13 +20,12 @@ mongoose.connect('mongodb+srv://dbAdmin:cSReR6ozlS35gEXN@cluster0.8faof.mongodb.
 // Einfaches Rollen-Middleware
 function checkRole(requiredRole) {
   return (req, res, next) => {
-    // Beispiel: Rolle wird aus einem Header 'x-role' gelesen
+    
     const userRole = req.headers['x-role'];
     if (!userRole) {
       return res.status(403).json({ error: 'Kein Zugriff: Keine Rolle angegeben' });
     }
-    // Wenn die benötigte Rolle als String übergeben wird, prüfen wir auf Gleichheit
-    // Alternativ kann requiredRole auch ein Array sein (z. B. ['APIUser', 'dbAdmin'])
+
     if (typeof requiredRole === 'string') {
       if (userRole === requiredRole) {
         return next();
